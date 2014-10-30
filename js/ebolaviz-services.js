@@ -21,32 +21,34 @@ ebolaVizApp.service("dataService", ["$http", function($http) {
 			{id: "confirmed", name: "Confirmed cases"},
 			{id: "probable", name: "Probable cases"},
 			{id: "suspected", name: "Suspected cases"}
-		]
+		];
 	};
 	
 	this.getIndicators = function() {
 		return [
 			{id: "population", name: "Entire population"},
 			{id: "workers", name: "Health workers"}
-		]
+		];
 	};
 	
     this.getHeadlineFigures = function() {
 		url = urlBase + "/sql?q=SELECT * from VW_HEADLINE_FIGURES";
 		return $http.get(url);
-    }
+    };
 
-    this.getCasesChartData = function(location,caseDef) {
-    	var command = "Select * From VW_LATEST_FIGURES ";
+    this.getCountryChartData = function(location,caseDefinition) {
+    	var command = "Select * From VW_RAW_DATA ";
     	var whereClause = "";
-    	if (location && caseDef) {
-    		whereClause = " WHERE location='" + location + "' AND case_definition='" + caseDef + "' ";
+    	if (location && caseDefinition) {
+    		whereClause = " WHERE location='" + location + "' AND case_definition='" + caseDefinition + "' ";
     	} else if (location) {
     		whereClause = " WHERE location='" + location + "'";
     	} else if (caseDef) {
-    		whereClause = " WHERE case_definition='" + caseDef + "'";
+    		whereClause = " WHERE case_definition='" + caseDefinition + "'";
     	}
     	command += whereClause + " Order By value DESC";
+    	//console.log(command);
     	return $http.get(urlBase + "/sql?q="+command);
-    }
+    };
+
 }]);

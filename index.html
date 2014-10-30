@@ -71,15 +71,15 @@
                     </div>
                 	<div class="row">
                         <div class="four columns">
-                            <select id="countrySelect" ng-model="selectedCountry" ng-change="showCharts()" ng-required ng-options="country.id as country.name for country in countries">
+                            <select id="countrySelect" ng-model="selectedCountry" ng-change="onChartOptionsChanged()" ng-required ng-options="country.id as country.name for country in countries">
                             </select>
                         </div>                        
                         <div class="four columns">
-                            <select id="affectedPopulationSelect" ng-model="selectedIndicator" ng-change="showCharts()" ng-required ng-options="indicator.id as indicator.name for indicator in indicators" disabled>
+                            <select id="affectedPopulationSelect" ng-model="selectedIndicator" ng-change="onChartOptionsChanged()" ng-required ng-options="indicator.id as indicator.name for indicator in indicators" disabled>
                             </select>
                         </div>
                         <div class="four columns">
-                            <select id="caseTypeSelect" ng-model="selectedCaseType" ng-required ng-change="showCharts()" ng-options="caseType.id as caseType.name for caseType in caseTypes">
+                            <select id="caseTypeSelect" ng-model="selectedCaseType" ng-required ng-change="onChartOptionsChanged()" ng-options="caseType.id as caseType.name for caseType in caseTypes">
                             </select>
                         </div>
                     </div>

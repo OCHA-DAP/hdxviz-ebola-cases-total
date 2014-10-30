@@ -9,16 +9,9 @@ var ebolaVizApp = angular.module("ebolaVizApp", [])
 		
 		$scope.getCountries = function() {
 			$scope.countries = dataService.getCountries();
-			$scope.countries.unshift({id: "all affected countries", name: "All Affected Countries"});
-			$scope.selectedCountry = "all affected countries";
-			//.success(function (countries) {
-			//	$scope.countries = countries;
-			//}).failure(function (error) {
-			//	$scope.countries = [];
-			//}).then(function(data) {
-			//	var allCountries = {id: "all", name: "All Affected Countries"};
-			//	$scope.countries.unshift(allCountries);
-			//});
+			$scope.selectedCountry = "Guinea";
+			//$scope.countries.unshift({id: "all affected countries", name: "All Affected Countries"});
+			//$scope.selectedCountry = "all affected countries";
 		};
 		$scope.getCountries();
 		
@@ -36,11 +29,30 @@ var ebolaVizApp = angular.module("ebolaVizApp", [])
 		};
 		$scope.getHeadlineFigures();
 		
-		$scope.createChartConfigBase = function (binding,data) {
-			return {
-				bindto: binding,	
+
+		function getCountryChartData(country,caseDefinition) {
+			chartData = [];
+			dataService.getCountryChartData(country,caseDefinition)
+			.success(function (data) {
+				for (var i = 0; i < data.length; i++) {
+					chartData.push([data[i].case_definition, data[i].location, data[i].period, data[i].value]);
+				};
+			})
+			.error(function (error) {
+				alert("Failed to return chart data from the data service");
+			});
+			return chartData;
+		};
+
+
+		function createCountryCasesChart() {
+			chartData = getCountryChartData($scope.selectedCountry, $scope.selectedCaseType + "_cases");
+			console.log("Priting data now");
+			console.log(chartData.length);
+			config = {
+				bindto: "#casesChartArea",
 				data: {
-					rows: data,
+					rows: chartData,
 					type: "bar",
 					x: "location",
 				},			
@@ -53,32 +65,17 @@ var ebolaVizApp = angular.module("ebolaVizApp", [])
 				padding: {
 					right: 20
 				}
-			}
-		};
-
-		$scope.getCasesChartData = function () {
-			country = $scope.selectedCountry
-			if ($scope.selectedCountry == "all affected countries") {
-				country = "";
 			};
-			dataService.getCasesChartData(country,$scope.selectedCaseType + "_cases")
-			.success(function (data) {
-				$scope.casesChartData = [];
-				for (var i = 0; i < data.length; i++) {
-					$scope.casesChartData[$scope.casesChartData.length] = [data[i].case_definition, data[i].location, data[i].period, data[i].value];
-				};
-			})
-			.error(function (error) {
-				$scope.casesChartData = [];
-			});
+			var casesChart = c3.generate(config);
 		};
-		
-		$scope.showCharts = function() {
 
-			//$scope.deathsChart = c3.generate($scope.createChartConfigBase("#deathsChartArea", $scope.getDeathsChartData()));
-			
-			$scope.getCasesChartData();
-			$scope.casesChart = c3.generate($scope.createChartConfigBase("#casesChartArea", $scope.casesChartData));
-			console.log($scope.casesChartData);
+		function refreshCharts() {
+			createCountryCasesChart();
 		};
+
+
+		$scope.onChartOptionsChanged = function() {
+			refreshCharts();
+		};
+
 	}]);
