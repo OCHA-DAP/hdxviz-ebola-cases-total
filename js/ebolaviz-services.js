@@ -4,17 +4,15 @@ ebolaVizApp.service("dataService", ["$http", function($http) {
 	
 	this.getCountries = function() {
 		return [
-			{id: "lbr", name:"Liberia"},
-			{id: "gin", name:"Guinea"},
-			{id: "lbr", name:"Liberia"},
-			{id: "mli", name:"Mali"},
-			{id: "sle", name:"Sierra Leone"},
-			{id: "nga", name:"Nigeria"},
-			{id: "esp", name:"Spain"},
-			{id: "usa", name:"United States of America"},
-			{id: "sen", name:"Senegal"}
+			{id: "Liberia", name:"Liberia"},
+			{id: "Guinea", name:"Guinea"},
+			{id: "Mali", name:"Mali"},
+			{id: "Sierra Leone", name:"Sierra Leone"},
+			{id: "Nigeria", name:"Nigeria"},
+			{id: "Spain", name:"Spain"},
+			{id: "United States of America", name:"United States of America"},
+			{id: "Senegal", name:"Senegal"}
 		];
-		return $http.get(urlBase + "/sql?q=SELECT * from VW_COUNTRIES");
 	};
 	
     this.getCaseTypes = function() {
@@ -38,11 +36,11 @@ ebolaVizApp.service("dataService", ["$http", function($http) {
 			confirmed_cases: 0,
 			probable_cases: 0,
 			suspected_cases: 0,
-			all_deaths: 4920,
+			all_deaths: 4922,
 			confirmed_deaths: 0,
 			probable_deaths: 0,
 			suspected_deaths: 0
 		};
-		return $http.get(urlBase + "/sql?q=SELECT * from VW_HEADLINE_FIGURES")
+		//return $http.get("https://ds-ec2.scraperwiki.com/hkiw9sb/ky9zjrxscneu7mg/sql?q=SELECT * from VW_HEADLINE_FIGURES");
     }
 }]);
