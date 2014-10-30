@@ -25,41 +25,60 @@ var ebolaVizApp = angular.module("ebolaVizApp", [])
 		$scope.getHeadlineFigures = function() {
 			dataService.getHeadlineFigures()
 			.success(function (data) {
-				$scope.headlineFigures = data;
+				$scope.headlineFigures = {};
+				for (var i = 0; i < data.length; i++) {
+					$scope.headlineFigures[data[i].case_definition] = data[i].value;
+				}
 			})
 			.error(function (error) {
 				$scope.headlineFigures = {};
-				log.print(error.toString());
 			});
 		};
 		$scope.getHeadlineFigures();
 		
-		
-		$scope.showCasesChart = function() {
-			config = {
-				bindto: "#casesChartArea",
+		$scope.createChartConfigBase = function (binding,data) {
+			return {
+				bindto: binding,	
 				data: {
-					columns: [
-						['data1', 30, 200, 100, 400, 150, 250],
-						['data2', 130, 100, 140, 200, 150, 50]
-					],
-					type: 'bar'
-				},
-				bar: {
-					width: {
-						ratio: 0.5 
-					}
+					rows: data,
+					type: "bar",
+					x: "location",
+				},			
+				color: {
+					pattern: ['#dd1c77', '#756bb1', '#e41a1c']
 				},
 				size: {
-					height: 300
+					height: 260
 				},
 				padding: {
 					right: 20
-				}		
+				}
+			}
+		};
+
+		$scope.getCasesChartData = function () {
+			country = $scope.selectedCountry
+			if ($scope.selectedCountry == "all affected countries") {
+				country = "";
 			};
-			return c3.generate(config);
+			dataService.getCasesChartData(country,$scope.selectedCaseType + "_cases")
+			.success(function (data) {
+				$scope.casesChartData = [];
+				for (var i = 0; i < data.length; i++) {
+					$scope.casesChartData[$scope.casesChartData.length] = [data[i].case_definition, data[i].location, data[i].period, data[i].value];
+				};
+			})
+			.error(function (error) {
+				$scope.casesChartData = [];
+			});
 		};
 		
-		$scope.showCasesChart("#casesChartArea");
-		
+		$scope.showCharts = function() {
+
+			//$scope.deathsChart = c3.generate($scope.createChartConfigBase("#deathsChartArea", $scope.getDeathsChartData()));
+			
+			$scope.getCasesChartData();
+			$scope.casesChart = c3.generate($scope.createChartConfigBase("#casesChartArea", $scope.casesChartData));
+			console.log($scope.casesChartData);
+		};
 	}]);

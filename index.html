@@ -6,24 +6,17 @@
         <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
         
     	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,200,300,600,700" />
-        <!-- Bootstrap isn't necessary. Our framework is build on top of it, but is heavily enhanced.
-        <link rel="stylesheet" type="text/css" href="vendors/c3-0.3.0/c3.css" />
-    	<link rel="stylesheet" type="text/css" href="vendors/font-awesome-4.2.0/css/font-awesome.min.css" />
-        <link rel="stylesheet" type="text/css" href="vendors/bootstrap-3.2.0-dist/css/bootstrap.min.css" />
-        <link rel="stylesheet" type="text/css" href="vendors/bootstrap-3.2.0-dist/css/bootstrap-theme.min.css" /> -->
         <link rel="stylesheet" type="text/css" href="css/framework.css" />
         <link rel="stylesheet" type="text/css" href="css/style.css" />
         <link rel="stylesheet" type="text/css" href="css/mobile.css" />
         <link rel="stylesheet" type="text/css" href="css/ebolaviz.css"/>
 
-
     	<script type="text/javascript" src="vendors/jquery-1.11.1/jquery-1.11.1.min.js"></script>
     	<script type="text/javascript" src="vendors/angular-1.2.26/angular.min.js"></script>
         <script type="text/javascript" src="vendors/angular-1.2.26/angular-resource.min.js"></script>
-        <script type="text/javascript" src="vendors/bootstrap-3.2.0-dist/js/bootstrap.min.js"></script>
     	<script type="text/javascript" src="vendors/d3/d3.min.js"></script>
     	<script type="text/javascript" src="vendors/c3-0.3.0/c3.min.js"></script>
-    	<script type="text/javascript" src="js/ebolaviz-app.js"></script>
+        <script type="text/javascript" src="js/ebolaviz-app.js"></script>
         <script type="text/javascript" src="js/ebolaviz-services.js"></script>
 
     </head>
@@ -78,15 +71,15 @@
                     </div>
                 	<div class="row">
                         <div class="four columns">
-                            <select id="countrySelect" ng-model="selectedCountry" ng-required ng-options="country.id as country.name for country in countries">
+                            <select id="countrySelect" ng-model="selectedCountry" ng-change="showCharts()" ng-required ng-options="country.id as country.name for country in countries">
                             </select>
                         </div>                        
                         <div class="four columns">
-                            <select id="affectedPopulationSelect" ng-model="selectedIndicator" ng-required ng-options="indicator.id as indicator.name for indicator in indicators">
+                            <select id="affectedPopulationSelect" ng-model="selectedIndicator" ng-change="showCharts()" ng-required ng-options="indicator.id as indicator.name for indicator in indicators" disabled>
                             </select>
                         </div>
                         <div class="four columns">
-                            <select id="caseTypeSelect" ng-model="selectedCaseType" ng-required ng-options="caseType.id as caseType.name for caseType in caseTypes">
+                            <select id="caseTypeSelect" ng-model="selectedCaseType" ng-required ng-change="showCharts()" ng-options="caseType.id as caseType.name for caseType in caseTypes">
                             </select>
                         </div>
                     </div>

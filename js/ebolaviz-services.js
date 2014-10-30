@@ -32,15 +32,21 @@ ebolaVizApp.service("dataService", ["$http", function($http) {
 	};
 	
     this.getHeadlineFigures = function() {
-		return {all_cases: 13703,
-			confirmed_cases: 0,
-			probable_cases: 0,
-			suspected_cases: 0,
-			all_deaths: 4922,
-			confirmed_deaths: 0,
-			probable_deaths: 0,
-			suspected_deaths: 0
-		};
-		//return $http.get("https://ds-ec2.scraperwiki.com/hkiw9sb/ky9zjrxscneu7mg/sql?q=SELECT * from VW_HEADLINE_FIGURES");
+		url = urlBase + "/sql?q=SELECT * from VW_HEADLINE_FIGURES";
+		return $http.get(url);
+    }
+
+    this.getCasesChartData = function(location,caseDef) {
+    	var command = "Select * From VW_LATEST_FIGURES ";
+    	var whereClause = "";
+    	if (location && caseDef) {
+    		whereClause = " WHERE location='" + location + "' AND case_definition='" + caseDef + "' ";
+    	} else if (location) {
+    		whereClause = " WHERE location='" + location + "'";
+    	} else if (caseDef) {
+    		whereClause = " WHERE case_definition='" + caseDef + "'";
+    	}
+    	command += whereClause + " Order By value DESC";
+    	return $http.get(urlBase + "/sql?q="+command);
     }
 }]);
