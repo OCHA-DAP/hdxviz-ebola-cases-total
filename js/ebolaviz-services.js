@@ -47,7 +47,6 @@ ebolaVizApp.service("dataService", ["$http", function($http) {
     		whereClause = " WHERE case_definition='" + caseDefinition + "'";
     	}
     	command += whereClause + " Order By value DESC";
-    	//console.log(command);
     	return $http.get(urlBase + "/sql?q="+command);
     };
 

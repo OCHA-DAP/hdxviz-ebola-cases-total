@@ -6,16 +6,13 @@ var ebolaVizApp = angular.module("ebolaVizApp", [])
 		
 		$scope.caseTypes = dataService.getCaseTypes();
 		$scope.selectedCaseType = "all";
-		
-		$scope.getCountries = function() {
-			$scope.countries = dataService.getCountries();
-			$scope.selectedCountry = "Guinea";
-			//$scope.countries.unshift({id: "all affected countries", name: "All Affected Countries"});
-			//$scope.selectedCountry = "all affected countries";
+
+		$scope.countries = dataService.getCountries();
+		if ($scope.countries.length > 0) {
+			$scope.selectedCountry = $scope.countries[0].id;
 		};
-		$scope.getCountries();
 		
-		$scope.getHeadlineFigures = function() {
+		function refreshHeadlineFigures() {
 			dataService.getHeadlineFigures()
 			.success(function (data) {
 				$scope.headlineFigures = {};
@@ -25,57 +22,50 @@ var ebolaVizApp = angular.module("ebolaVizApp", [])
 			})
 			.error(function (error) {
 				$scope.headlineFigures = {};
+				alert("Failed to get headline figures");
 			});
 		};
-		$scope.getHeadlineFigures();
+		refreshHeadlineFigures();
 		
-
-		function getCountryChartData(country,caseDefinition) {
-			chartData = [];
-			dataService.getCountryChartData(country,caseDefinition)
+		function refreshCountryCasesChart(bindElement, isCases) {
+			var postfix = (isCases) ? "_cases": "_deaths";
+			dataService.getCountryChartData($scope.selectedCountry, $scope.selectedCaseType + postfix)
 			.success(function (data) {
-				for (var i = 0; i < data.length; i++) {
-					chartData.push([data[i].case_definition, data[i].location, data[i].period, data[i].value]);
-				};
+				drawOneCountryCasesChart(bindElement, data);
 			})
 			.error(function (error) {
 				alert("Failed to return chart data from the data service");
-			});
-			return chartData;
+			});	
 		};
-
-
-		function createCountryCasesChart() {
-			chartData = getCountryChartData($scope.selectedCountry, $scope.selectedCaseType + "_cases");
-			console.log("Priting data now");
-			console.log(chartData.length);
+		
+		function drawOneCountryCasesChart(bindElement,data){
 			config = {
-				bindto: "#casesChartArea",
+				bindto: bindElement,
 				data: {
-					rows: chartData,
-					type: "bar",
-					x: "location",
-				},			
-				color: {
-					pattern: ['#dd1c77', '#756bb1', '#e41a1c']
+					json: data,
+					type: "timeseries",
+					keys: {
+						value: ["value"]
+					}			
 				},
 				size: {
-					height: 260
+					height: 240
 				},
-				padding: {
-					right: 20
-				}
 			};
 			var casesChart = c3.generate(config);
 		};
+		
 
 		function refreshCharts() {
-			createCountryCasesChart();
+			refreshCountryCasesChart("#casesChartArea", isCases=true);
+			refreshCountryCasesChart("#deathsChartArea", isCases=false);
 		};
 
 
 		$scope.onChartOptionsChanged = function() {
 			refreshCharts();
 		};
+		
+		refreshCharts();
 
 	}]);
