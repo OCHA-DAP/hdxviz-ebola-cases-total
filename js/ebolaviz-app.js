@@ -47,7 +47,7 @@ var ebolaVizApp = angular.module("ebolaVizApp", [])
 					json: data,
 					mimeType: "json",
 					x: "period",
-					type: "spline",
+					type: "line",
 					keys: {
 						x: "period",
 						value: ["value"]
@@ -57,7 +57,7 @@ var ebolaVizApp = angular.module("ebolaVizApp", [])
 					x: {
 						type: 'timeseries',
 						tick: {
-							format: "%m-%d",
+							format: "%e-%b",
 							culling: {
 								max: 100
 							}
