@@ -41,7 +41,7 @@ var ebolaVizApp = angular.module("ebolaVizApp", [])
 		};
 
 		function generateOneCountryChart(bindElement,data){
-			config = {
+			var config = {
 				bindto: bindElement,
 				data: {
 					json: data,
@@ -51,6 +51,9 @@ var ebolaVizApp = angular.module("ebolaVizApp", [])
 					keys: {
 						x: "period",
 						value: ["value"]
+					},
+					names: {
+						value: $scope.selectedCaseType.name
 					}
 				},
 				axis: {
