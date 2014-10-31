@@ -47,7 +47,7 @@ var ebolaVizApp = angular.module("ebolaVizApp", [])
 					json: data,
 					mimeType: "json",
 					x: "period",
-					type: "line",
+					type: "area",
 					keys: {
 						x: "period",
 						value: ["value"]
