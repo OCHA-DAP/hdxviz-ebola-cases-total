@@ -47,11 +47,7 @@ var ebolaVizApp = angular.module("ebolaVizApp", [])
 					json: data,
 					mimeType: "json",
 					x: "period",
-<<<<<<< HEAD
 					type: "line",
-=======
-					type: "area-spline",
->>>>>>> origin/gh-pages
 					keys: {
 						x: "period",
 						value: ["value"]
@@ -61,11 +57,7 @@ var ebolaVizApp = angular.module("ebolaVizApp", [])
 					x: {
 						type: 'timeseries',
 						tick: {
-<<<<<<< HEAD
-							format: "%e-%b",
-=======
 							format: xAxisDateFormat,
->>>>>>> origin/gh-pages
 							culling: {
 								max: 7
 							},
