@@ -1,7 +1,7 @@
 var ebolaVizApp = angular.module("ebolaVizApp", [])
 	.controller("ebolaVizController", ["$scope", "dataService", function($scope, dataService) {
 		yAxisNumberFormat = d3.format(",");
-		xAxisDateFormat = "%e %b";
+		xAxisDateFormat = "%b %d";
 
 		$scope.indicators = dataService.getIndicators();
 		$scope.selectedIndicator = "population";
@@ -39,7 +39,7 @@ var ebolaVizApp = angular.module("ebolaVizApp", [])
 				alert("Failed to return chart data from the data service");
 			});	
 		};
-		
+
 		function generateOneCountryChart(bindElement,data){
 			config = {
 				bindto: bindElement,
@@ -47,31 +47,52 @@ var ebolaVizApp = angular.module("ebolaVizApp", [])
 					json: data,
 					mimeType: "json",
 					x: "period",
+<<<<<<< HEAD
 					type: "line",
+=======
+					type: "area-spline",
+>>>>>>> origin/gh-pages
 					keys: {
 						x: "period",
 						value: ["value"]
-					}			
+					}
 				},
 				axis: {
 					x: {
 						type: 'timeseries',
 						tick: {
+<<<<<<< HEAD
 							format: "%e-%b",
+=======
+							format: xAxisDateFormat,
+>>>>>>> origin/gh-pages
 							culling: {
-								max: 100
-							}
+								max: 7
+							},
+							rotate: 0
 						}
 					},
 					y: {
 						tick: {
-							format: d3.format(",")
+							format: yAxisNumberFormat,
+							culling: {
+								max: 5
+							}
 						}
 					}
 				},
 				size: {
 					height: 240
 				},
+				legend: {
+				    show: false
+				},
+				point: {
+					r: 3,
+					select: {
+						r: 5
+					}
+				}
 			};
 			return c3.generate(config);
 		};
