@@ -18,7 +18,16 @@
     	<script type="text/javascript" src="vendors/c3-0.3.0/c3.min.js"></script>
         <script type="text/javascript" src="js/ebolaviz-app.js"></script>
         <script type="text/javascript" src="js/ebolaviz-services.js"></script>
-
+		
+		<style>
+		  #timeseries .c3-line {
+			stroke-width: 2px;
+		  }
+		  #timeseries .c3-line-Bamako {
+			stroke-width: 4px;
+		  }
+		</style>
+		
     </head>
     <body>
         <div ng-app="ebolaVizApp" ng-controller="ebolaVizController as ebolaVizCtrl">
@@ -92,7 +101,7 @@
                         <h4>Cumulative number of {{selectedCaseType}} cases in {{selectedCountry}}</h4>
                     </div>
                     <div class="six columns">
-                        <h4>Cumulative number of {{selectedCaseType}} deaths {{selectedCountry}}</h4>
+                        <h4>Cumulative number of {{selectedCaseType}} deaths in {{selectedCountry}}</h4>
                     </div>
                 </div>
 

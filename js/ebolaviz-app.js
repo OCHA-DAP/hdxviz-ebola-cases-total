@@ -1,6 +1,8 @@
 var ebolaVizApp = angular.module("ebolaVizApp", [])
 	.controller("ebolaVizController", ["$scope", "dataService", function($scope, dataService) {
-		
+		yAxisNumberFormat = d3.format(",");
+		xAxisDateFormat = "%e %b";
+
 		$scope.indicators = dataService.getIndicators();
 		$scope.selectedIndicator = "population";
 		
@@ -31,28 +33,47 @@ var ebolaVizApp = angular.module("ebolaVizApp", [])
 			var postfix = (isCases) ? "_cases": "_deaths";
 			dataService.getCountryChartData($scope.selectedCountry, $scope.selectedCaseType + postfix)
 			.success(function (data) {
-				drawOneCountryCasesChart(bindElement, data);
+				generateOneCountryChart(bindElement, data);
 			})
 			.error(function (error) {
 				alert("Failed to return chart data from the data service");
 			});	
 		};
 		
-		function drawOneCountryCasesChart(bindElement,data){
+		function generateOneCountryChart(bindElement,data){
 			config = {
 				bindto: bindElement,
 				data: {
 					json: data,
-					type: "timeseries",
+					mimeType: "json",
+					x: "period",
+					type: "spline",
 					keys: {
+						x: "period",
 						value: ["value"]
 					}			
+				},
+				axis: {
+					x: {
+						type: 'timeseries',
+						tick: {
+							format: "%m-%d",
+							culling: {
+								max: 100
+							}
+						}
+					},
+					y: {
+						tick: {
+							format: d3.format(",")
+						}
+					}
 				},
 				size: {
 					height: 240
 				},
 			};
-			var casesChart = c3.generate(config);
+			return c3.generate(config);
 		};
 		
 
