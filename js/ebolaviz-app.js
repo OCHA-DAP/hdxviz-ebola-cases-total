@@ -66,7 +66,10 @@ var ebolaVizApp = angular.module("ebolaVizApp", [])
 					},
 					y: {
 						tick: {
-							format: yAxisNumberFormat
+							format: yAxisNumberFormat,
+							culling: {
+								max: 5
+							}
 						}
 					}
 				},
