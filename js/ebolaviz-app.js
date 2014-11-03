@@ -43,6 +43,9 @@ var ebolaVizApp = angular.module("ebolaVizApp", [])
 		function generateOneCountryChart(bindElement,data){
 			var config = {
 				bindto: bindElement,
+				padding: {
+					right: 50
+				},
 				data: {
 					json: data,
 					mimeType: "json",
