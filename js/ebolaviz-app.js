@@ -39,9 +39,15 @@ var ebolaVizApp = angular.module("ebolaVizApp", [])
 		
 		function refreshCountryCasesChart(bindElement, isCases) {
 			var postfix = (isCases) ? "_cases": "_deaths";
-			dataService.getCountryChartData($scope.selectedCountry, $scope.selectedCaseType + postfix)
+			var location = ($scope.selectedCountry == "All affected countries") ? null: $scope.selectedCountry; //send the null value to getCountryData if all affected countries is selected
+			dataService.getCountryChartData(location, $scope.selectedCaseType + postfix)
 			.success(function (data) {
-				generateOneCountryChart(bindElement, data);
+				if (location) {
+					generateOneCountryChart(bindElement, data);
+				}
+				else {
+					generateAllCountriesChart(bindElement, data);
+				};
 			})
 			.error(function (error) {
 				alert("Failed to return chart data from the data service");
@@ -103,7 +109,68 @@ var ebolaVizApp = angular.module("ebolaVizApp", [])
 			return c3.generate(config);
 		};
 		
-
+		function generateAllCountriesChart(bindElement,data){
+			var groups = [];
+			for (i=1; i<$scope.countries.length; i++) {
+				groups[groups.length] = $scope.countries[i].id;
+			};
+			console.log(groups);
+			var config = {
+				bindto: bindElement,
+				padding: {
+					right: 50
+				},
+				data: {
+					json: data,
+					mimeType: "json",
+					//x: "period",
+					type: "area-spline",
+					keys: {
+						x: "period",
+						value: "value",
+						groups: [groups]
+					},
+					//names: {
+					//	value: groups
+					//},
+					groups:[groups]
+				},
+				axis: {
+					x: {
+						type: 'timeseries',
+						tick: {
+							format: xAxisDateFormat,
+							culling: {
+								max: 7
+							},
+							rotate: 0
+						}
+					},
+					y: {
+						tick: {
+							format: yAxisNumberFormat,
+							culling: {
+								max: 5
+							}
+						}
+					}
+				},
+				size: {
+					height: 240
+				},
+				legend: {
+				    show: false
+				},
+				point: {
+					r: 3,
+					select: {
+						r: 5
+					}
+				}
+			};
+			return c3.generate(config);			
+		};
+		
 		function refreshCharts() {
 			refreshCountryCasesChart("#casesChartArea", isCases=true);
 			refreshCountryCasesChart("#deathsChartArea", isCases=false);

@@ -44,7 +44,7 @@ ebolaVizApp.service("dataService", ["$http", function($http) {
 			whereClause = " WHERE location='" + location + "' AND case_definition='" + caseDefinition + "' ";
 		} else if (location) {
 			whereClause = " WHERE location='" + location + "'";
-		} else if (caseDef) {
+		} else if (caseDefinition) {
 			whereClause = " WHERE case_definition='" + caseDefinition + "'";
 		}
 		command += whereClause + " Order By value ASC";
