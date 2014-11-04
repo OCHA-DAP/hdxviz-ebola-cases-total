@@ -34,6 +34,12 @@
           .verticalLine {
             border-left: thick solid #ff0000;
           }
+          .selectors {
+            position: absolute;
+            right: 10%;
+            top: 5%;
+            bottom: 0px;  /* sticks to the bottom */
+          }
 		</style>
 
     </head>
@@ -53,7 +59,7 @@
             </div>
 
                 <!-- Dropdown Menus -->
-                <div class="three columns" style="padding-top: 40px;">
+                <div class="three columns selectors">
                     <form>
                         <div class="row">
                             <div>
@@ -75,6 +81,11 @@
                     </form>
         		</div>
 
+                <div class="ten columns" style="padding-left: 0px; padding-top: 40px;">
+                    <div>
+                        <h1 style="color: #F65C51;">{{selectedCountry}}</h1>
+                    </div>
+                </div>
             </div>
 
             <hr />
@@ -84,7 +95,7 @@
               <!-- Cases -->
               <div class="six columns small-font">
                   <div class="row">
-                    <h1>{{headlineFigures.all_cases | number:0}} Cases</h1>
+                    <h1 style="color: #404040;">{{headlineFigures.all_cases | number:0}} Cases</h1>
                   </div>
                   <div class="row">
                     <div class="columns" style="padding-left: 0px;">
@@ -102,7 +113,7 @@
               <!-- Deaths -->
               <div class="six columns small-font">
                   <div class="row">
-                            <h1>{{headlineFigures.all_deaths | number:0}} Deaths</h1>
+                            <h1 style="color: #404040;">{{headlineFigures.all_deaths | number:0}} Deaths</h1>
                   </div>
                   <div class="row">
                     <div class="columns" style="padding-left: 0px;">
