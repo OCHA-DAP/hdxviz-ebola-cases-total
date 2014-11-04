@@ -11,8 +11,16 @@ var ebolaVizApp = angular.module("ebolaVizApp", [])
 
 		$scope.countries = dataService.getCountries();
 		if ($scope.countries.length > 0) {
-			$scope.selectedCountry = $scope.countries[0].id;
+			$scope.selectedCountry = $scope.countries[0].name;
 		};
+		
+		$scope.getSelectedCountryName = function(){
+			for (i=0; i<$scope.countries; i++) {
+				if ($scope.countries[i].id == $scope.selectedCountry) {
+					return $scope.countries[i].name;
+				}
+			}
+		}
 		
 		function refreshHeadlineFigures() {
 			dataService.getHeadlineFigures()
