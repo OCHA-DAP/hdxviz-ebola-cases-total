@@ -67,11 +67,13 @@
                                 <select id="countrySelect" ng-model="selectedCountry" ng-change="onChartOptionsChanged()" ng-required ng-options="country.id as country.name for country in countries">
                                 </select>
                             </div>
+							<!--
                             <div>
                                 <label for="affectedPopulationSelect">Affected population:</label>
                                 <select id="affectedPopulationSelect" ng-model="selectedIndicator" ng-change="onChartOptionsChanged()" ng-required ng-options="indicator.id as indicator.name for indicator in indicators" disabled>
                                 </select>
                             </div>
+							-->
                             <div>
                                 <label for="caseTypeSelect">Case Type:</label>
                                 <select id="caseTypeSelect" ng-model="selectedCaseType" ng-required ng-change="onChartOptionsChanged()" ng-options="caseType.id as caseType.name for caseType in caseTypes">
