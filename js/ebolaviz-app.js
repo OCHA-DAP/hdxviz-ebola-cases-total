@@ -46,11 +46,12 @@ var ebolaVizApp = angular.module("ebolaVizApp", [])
 					generateOneCountryChart(bindElement, data);
 				}
 				else {
-					generateAllCountriesChart(bindElement, data);
+					generateAllCountriesChart(bindElement, buildAllCountriesData(data));
 				};
 			})
 			.error(function (error) {
 				alert("Failed to return chart data from the data service");
+				console.log(error);
 			});	
 		};
 
@@ -106,6 +107,7 @@ var ebolaVizApp = angular.module("ebolaVizApp", [])
 					}
 				}
 			};
+
 			return c3.generate(config);
 		};
 		
@@ -115,25 +117,13 @@ var ebolaVizApp = angular.module("ebolaVizApp", [])
 				groups[groups.length] = $scope.countries[i].id;
 			};
 			console.log(groups);
-			var config = {
+			var config2 = {
 				bindto: bindElement,
-				padding: {
-					right: 50
-				},
 				data: {
-					json: data,
-					mimeType: "json",
-					//x: "period",
+					x: "country",
+					columns: data,
 					type: "area-spline",
-					keys: {
-						x: "period",
-						value: "value",
-						groups: [groups]
-					},
-					//names: {
-					//	value: groups
-					//},
-					groups:[groups]
+					groups: [groups]
 				},
 				axis: {
 					x: {
@@ -141,46 +131,86 @@ var ebolaVizApp = angular.module("ebolaVizApp", [])
 						tick: {
 							format: xAxisDateFormat,
 							culling: {
-								max: 7
-							},
-							rotate: 0
+								max: 100
+							}
+						},
+						label: {
+							text: "Report date",
+							position: "outer-center"
 						}
 					},
 					y: {
 						tick: {
-							format: yAxisNumberFormat,
-							culling: {
-								max: 5
-							}
+							format: yAxisNumberFormat
 						}
 					}
 				},
 				size: {
-					height: 240
+					height: 300
 				},
-				legend: {
-				    show: false
-				},
-				point: {
-					r: 3,
-					select: {
-						r: 5
-					}
-				}
-			};
-			return c3.generate(config);			
+				padding: {
+					right: 20
+				}		
+			}
+			return c3.generate(config2);			
 		};
 		
 		function refreshCharts() {
 			refreshCountryCasesChart("#casesChartArea", isCases=true);
-			refreshCountryCasesChart("#deathsChartArea", isCases=false);
+			refreshCountryCasesChart("#deathsChartArea", isCases=false);				
 		};
 
 
 		$scope.onChartOptionsChanged = function() {
 			refreshCharts();
 		};
-		
+
+		function buildAllCountriesData(data) {
+			var dataArray = [[]]; //An empty two dimensional array to begin with
+			dataArray[0][0] = "country";
+			for (row=0; row<data.length;row++){
+				var country = data[row].location;
+				var period = data[row].period;
+				var value = data[row].value;
+
+				//find the index of the period. Insert it at the end if it does not exist.
+				var periodIndex = -1;
+				for (i=1; i < dataArray[0].length; i++) {
+					if (dataArray[0][i] == period) {
+						periodIndex = i;
+						break;
+					};
+				};
+				if (periodIndex == -1) { //period not found, add it to the output with all null values
+					periodIndex = dataArray[0].length;
+					dataArray[0][periodIndex] = period;
+					for (i=1; i<dataArray.length; i++) {
+						dataArray[i][periodIndex] = "";
+					};
+				};
+
+				//find the index of the country. Insert it at the end if it does not exist.
+				var countryIndex = -1;
+				for (i=1; i < dataArray.length; i++) {
+					if (dataArray[i][0] == country) {
+						countryIndex = i;
+						break;
+					};
+				};
+				if (countryIndex == -1) { //country not found, add it to the output with all null values
+					countryIndex = dataArray.length;
+					dataArray[countryIndex] = [];
+					dataArray[countryIndex][0] = country;
+					for (i=1; i<dataArray[0].length; i++) {
+						dataArray[countryIndex][i] = "";
+					};
+				};
+				dataArray[countryIndex][periodIndex] = value;
+			};
+			console.log(dataArray);
+			return dataArray;
+		}
+
 		refreshCharts();
 
 	}]);
