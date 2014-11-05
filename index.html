@@ -40,6 +40,11 @@
             top: 5%;
             bottom: 0px;  /* sticks to the bottom */
           }
+          .footnote {
+            padding-top: 20%;
+            font-size: 13px;
+            line-height: 16px;
+          }
 		</style>
 
     </head>
@@ -52,7 +57,7 @@
         			<h1><strong>2014 Ebola Virus Disease (EVD) Outbreak</strong></h1>
 
                 <div class="ten columns" style="padding-left: 0px; padding-top: 30px;">
-                    <p>Total number of probable, confirmed and suspected Ebola cases and deaths in Guinea, Liberia, Sierra Leone, Nigeria and Senegal. The data is extracted from <a href="http://www.who.int/csr/disease/ebola/situation-reports/en/">WHO Ebola Response Roadmap Situation Reports</a>.</p>
+                    <p>Total number of probable, confirmed and suspected Ebola cases and deaths in Guinea, Liberia, Sierra Leone, Nigeria and Senegal<strong>*</strong>. The data is extracted from <a href="http://www.who.int/csr/disease/ebola/situation-reports/en/">WHO Ebola Response Roadmap Situation Reports</a>.</p>
 
                     <a href="https://data.hdx.rwlabs.org/dataset/ebola-cases-2014" class="btn btn-default" style="float:left;">Download data in HDX</a>
                 </div>
@@ -79,13 +84,14 @@
                                 <select id="caseTypeSelect" ng-model="selectedCaseType" ng-required ng-change="onChartOptionsChanged()" ng-options="caseType.id as caseType.name for caseType in caseTypes">
                                 </select>
                             </div>
+                            <div class="footnote"><strong>*</strong>The outbreaks of EVD in Senegal and Nigeria were declared over on 17 October and 19 October 2014, respectively.</div>
                         </div>
                     </form>
         		</div>
 
                 <div class="ten columns" style="padding-left: 0px; padding-top: 40px;">
                     <div>
-                        <h1 style="color: #F65C51;">{{selectedCountry}}</h1>
+                        <h1 id="fade-in" style="color: #F65C51;">{{selectedCountry}}</h1>
                     </div>
                 </div>
             </div>

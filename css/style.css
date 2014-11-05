@@ -23,7 +23,6 @@
   src: url('assets/fonts/Gotham-Bold.otf?#iefix') format('embedded-opentype'),
 }
 
-
 body {
  	background-color: #ffffff;
   	color: #404040;
@@ -111,6 +110,46 @@ h1, h2, h3, h4, h5 {
 	color: #000000;
 	font-family: "Source Sans Pro", Arial, Helvetica, Geneva, sans-serif;
 	font-weight: bold;
+}
+
+
+#fade-in {
+    animation: fadein 2s;
+    -moz-animation: fadein 2s; /* Firefox */
+    -webkit-animation: fadein 2s; /* Safari and Chrome */
+    -o-animation: fadein 2s; /* Opera */
+}
+@keyframes fadein {
+    from {
+        opacity:0;
+    }
+    to {
+        opacity:1;
+    }
+}
+@-moz-keyframes fadein { /* Firefox */
+    from {
+        opacity:0;
+    }
+    to {
+        opacity:1;
+    }
+}
+@-webkit-keyframes fadein { /* Safari and Chrome */
+    from {
+        opacity:0;
+    }
+    to {
+        opacity:1;
+    }
+}
+@-o-keyframes fadein { /* Opera */
+    from {
+        opacity:0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 /* Changed for the blog post area; adapting to Yumi's style. */
