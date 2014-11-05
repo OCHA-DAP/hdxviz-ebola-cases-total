@@ -36,7 +36,7 @@ var ebolaVizApp = angular.module("ebolaVizApp", [])
 				};
 			})
 			.error(function (error) {
-				alert("Failed to return chart data from the data service");
+				console.log("Failed to return chart data from the data service");
 				console.log(error);
 			});	
 		};
@@ -209,7 +209,7 @@ var ebolaVizApp = angular.module("ebolaVizApp", [])
 			})
 			.error(function (error) {
 				$scope.headlineFigures = {};
-				alert("Failed to update headline figures");
+				console.log("Failed to update headline figures");
 			});
 		};
 
@@ -328,7 +328,7 @@ var ebolaVizApp = angular.module("ebolaVizApp", [])
 			if (datasetIndex >= 0) {
 				$scope.currentDataset = $scope.datasets[datasetIndex];
 			} else {
-				alert("Data configuration failed")
+				console.log("Data configuration failed")
 			};
 		};
 

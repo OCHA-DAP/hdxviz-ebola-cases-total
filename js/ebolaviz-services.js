@@ -45,7 +45,7 @@ ebolaVizApp.service("dataService", ["$http", function($http) {
 
     this.getLatestFiguresPromise = function(location, caseDefinition) {
     	var sql = "SELECT * from VW_LATEST_FIGURES" + buildLocationCaseDefinitionWhereClause(location, caseDefinition) + " Order By value ASC";
-    	alert(sql);
+    	console.log(sql);
 		return $http.get(sqlEndpointUrlBase + sql);
     };
 

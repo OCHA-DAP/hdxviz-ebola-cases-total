@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>West Africa Ebola Outbreak</title>
+        <meta charset=utf-8 />
+        <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+
+    	<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:400,200,300,600,700" />
+        <link rel="stylesheet" type="text/css" href="css/framework.css" />
+        <link rel="stylesheet" type="text/css" href="css/style.css" />
+        <link rel="stylesheet" type="text/css" href="css/mobile.css" />
+        <link rel="stylesheet" type="text/css" href="css/ebolaviz.css"/>
+
+    	<script type="text/javascript" src="vendors/jquery-1.11.1/jquery-1.11.1.min.js"></script>
+    	<script type="text/javascript" src="vendors/angular-1.2.26/angular.min.js"></script>
+    	
+		<script type="text/javascript" src="vendors/d3/d3.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="vendors/c3-0.3.0/c3.css"/>
+    	<script type="text/javascript" src="vendors/c3-0.3.0/c3.min.js"></script>
+        
+		<script type="text/javascript" src="js/ebolaviz-app.js"></script>
+        <script type="text/javascript" src="js/ebolaviz-services.js"></script>
+
+		<style>
+		  .c3-line {
+			stroke-width: 2px;
+		  }
+		  .c3-line-Bamako {
+			stroke-width: 4px;
+		  }
+          .c3-legend-item {
+            font-size: 10px;
+          }
+          .small-font {
+            font-size: 16px;
+          }
+          .verticalLine {
+            border-left: thick solid #ff0000;
+          }
+          .selectors {
+            position: absolute;
+            right: 5%;
+            top: 3%;
+            bottom: 0px;  /* sticks to the bottom */
+          }
+          .footnote {
+            padding-top: 20%;
+            font-size: 13px;
+            line-height: 16px;
+          }
+		</style>
+
+    </head>
+    <body>
+        <div ng-app="ebolaVizApp" ng-controller="ebolaVizController as ebolaVizCtrl">
+
+            <div class="row" style="padding-bottom: 0px;">
+
+            <div class="nine columns" style="padding-left:0px; margin-left:0px; padding-top: 30px;">
+        			<h1><strong>2014 Ebola Virus Disease (EVD) Outbreak</strong></h1>
+
+                <div class="ten columns" style="padding-left: 0px; padding-top: 30px;">
+                    <p>Total number of probable, confirmed and suspected Ebola cases and deaths in Guinea, Liberia, Sierra Leone, Nigeria and Senegal<strong>*</strong>. The data is extracted from <a href="http://www.who.int/csr/disease/ebola/situation-reports/en/" target="_blank">WHO Ebola Response Roadmap Situation Reports</a>.</p>
+
+                    <a href="https://data.hdx.rwlabs.org/dataset/ebola-cases-2014" class="btn btn-default" style="float:left;" target="_blank">Download data in HDX</a>
+                </div>
+            </div>
+
+                <!-- Dropdown Menus -->
+                <div class="three columns selectors">
+                    <form>
+                        <div class="row">
+                            <div>
+                                <label for="countrySelect">Country:</label>
+                                <select id="countrySelect" ng-model="selectedCountry" ng-change="onChartOptionsChanged()" ng-required ng-options="country.id as country.name for country in countries">
+                                </select>
+                            </div>
+							<!--
+                            <div>
+                                <label for="affectedPopulationSelect">Affected population:</label>
+                                <select id="affectedPopulationSelect" ng-model="selectedIndicator" ng-change="onChartOptionsChanged()" ng-required ng-options="indicator.id as indicator.name for indicator in indicators" disabled>
+                                </select>
+                            </div>
+							-->
+                            <div>
+                                <label for="caseTypeSelect">Case Type:</label>
+                                <select id="caseTypeSelect" ng-model="selectedCaseType" ng-required ng-change="onChartOptionsChanged()" ng-options="caseType.id as caseType.name for caseType in caseTypes">
+                                </select>
+                            </div>
+                            <div class="footnote"><strong>*</strong>The outbreaks of EVD in Senegal and Nigeria were declared over on 17 October and 19 October 2014, respectively.</div>
+                        </div>
+                    </form>
+        		</div>
+
+                <div class="ten columns" style="padding-left: 0px; padding-top: 40px;">
+                    <div>
+                        <h1 id="fade-in" style="color: #F65C51;">{{selectedCountry}}</h1>
+                    </div>
+                </div>
+            </div>
+
+            <hr />
+
+            <div class="row">
+
+              <!-- Cases -->
+              <div class="six columns small-font">
+                  <div class="row">
+                    <h1 style="color: #404040;">{{headlineFigures.all_cases | number:0}} Cases</h1>
+                  </div>
+                  <div class="row">
+                    <div class="columns" style="padding-left: 0px;">
+                        <div><span style="font-weight: 700;">{{headlineFigures.confirmed_cases | number:0}}</span> confirmed cases</div>
+                    </div>
+                    <div class="columns">
+                        <div><span style="font-weight: 700;">{{headlineFigures.probable_cases | number:0}}</span> probable cases</div>
+                    </div>
+                    <div class="columns">
+                        <div><span style="font-weight: 700;">{{headlineFigures.suspected_cases | number:0}}</span> suspected cases</div>
+                    </div>
+                  </div>
+              </div>
+
+              <!-- Deaths -->
+              <div class="six columns small-font">
+                  <div class="row">
+                            <h1 style="color: #404040;">{{headlineFigures.all_deaths | number:0}} Deaths</h1>
+                  </div>
+                  <div class="row">
+                    <div class="columns" style="padding-left: 0px;">
+                        <div><span style="font-weight: 700;">{{headlineFigures.confirmed_deaths | number:0}}</span> confirmed deaths</div>
+                    </div>
+                    <div class="columns">
+                        <div><span style="font-weight: 700;">{{headlineFigures.probable_deaths | number:0}}</span> probable deaths</div>
+                    </div>
+                    <div class="columns">
+                        <div><span style="font-weight: 700;">{{headlineFigures.suspected_deaths | number:0}}</span> suspected deaths</div>
+                    </div>
+                  </div>
+                  <br />
+            </div>
+
+            <div class="row">
+            	<div class="row">
+                    <div class="six columns">
+                        <h4 style="padding-left: 20px;">Cumulative number of {{selectedCaseType}} cases</h4>
+                    </div>
+                    <div class="six columns">
+                        <h4 style="padding-left: 20px;">Cumulative number of {{selectedCaseType}} deaths</h4>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div id="casesChartArea" class="six columns"></div>
+                    <div id="deathsChartArea" class="six columns"></div>
+                </div>
+            </div>
+            <!--
+            <div>
+                <div class="row">
+                    <div class="twelve columns">
+                        <h1>{{timeSeriesChartTitle}}</h1>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div  id="timeSeriesChartArea" class="twelve columns"></div>
+                </div>
+            </div>
+			-->
+        </div>
+    </body>
+</html>
