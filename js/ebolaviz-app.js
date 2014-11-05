@@ -27,40 +27,38 @@ var ebolaVizApp = angular.module("ebolaVizApp", [])
 		};
 		refreshHeadlineFigures();
 		
-		function generateCountryCasesChart(bindElement, isCases) {
+		function refreshCountryCasesChart(bindElement, isCases) {
 			var postfix = (isCases) ? "_cases": "_deaths";
 			dataService.getCountryChartData($scope.selectedCountry, $scope.selectedCaseType + postfix)
 			.success(function (data) {
-				config = {};
-				config.bindto = bindElement;
-				config.data = {};
-				config.data.json = data;
-				config.data.keys = {};
-				config.data.keys.x = "period";
-				config.data.keys.value = ["value"];
-				config.data.type = "bar";
-				
-				config.axis = {};
-				config.axis.x = {};
-				config.axis.y = {};
-				
-				config.axis.x.type = "category";
-				config.axis.y.type = "timeseries";
-						
-				config.size = {};
-				config.size.height = 240;
-
-				return c3.generate(config);
+				drawOneCountryCasesChart(bindElement, data);
 			})
 			.error(function (error) {
 				alert("Failed to return chart data from the data service");
 			});	
 		};
 		
-	
+		function drawOneCountryCasesChart(bindElement,data){
+			config = {
+				bindto: bindElement,
+				data: {
+					json: data,
+					type: "timeseries",
+					keys: {
+						value: ["value"]
+					}			
+				},
+				size: {
+					height: 240
+				},
+			};
+			var casesChart = c3.generate(config);
+		};
+		
+
 		function refreshCharts() {
-			var casesChart = generateCountryCasesChart("#casesChartArea", isCases=true);
-			var deathsChart = generateCountryCasesChart("#deathsChartArea", isCases=false);
+			refreshCountryCasesChart("#casesChartArea", isCases=true);
+			refreshCountryCasesChart("#deathsChartArea", isCases=false);
 		};
 
 
