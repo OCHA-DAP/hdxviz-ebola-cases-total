@@ -49,7 +49,7 @@
 
     </head>
     <body>
-        <div ng-app="ebolaVizApp" ng-controller="ebolaVizController as ebolaVizCtrl">
+        <div ng-app="ebolaVizApp" ng-init="initApplication" ng-controller="ebolaVizController as ebolaVizCtrl">
 
             <div class="row" style="padding-bottom: 0px;">
 
@@ -103,17 +103,17 @@
               <!-- Cases -->
               <div class="six columns small-font">
                   <div class="row">
-                    <h1 style="color: #404040;">{{headlineFigures.all_cases | number:0}} Cases</h1>
+                    <h1 style="color: #404040;">{{currentDataset.latestFigures.cases.all | number:0}} Cases</h1>
                   </div>
                   <div class="row">
                     <div class="columns" style="padding-left: 0px;">
-                        <div><span style="font-weight: 700;">{{headlineFigures.confirmed_cases | number:0}}</span> confirmed cases</div>
+                        <div><span style="font-weight: 700;">{{currentDataset.latestFigures.cases.confirmed | number:0}}</span> confirmed cases</div>
                     </div>
                     <div class="columns">
-                        <div><span style="font-weight: 700;">{{headlineFigures.probable_cases | number:0}}</span> probable cases</div>
+                        <div><span style="font-weight: 700;">{{currentDataset.latestFigures.cases.probable | number:0}}</span> probable cases</div>
                     </div>
                     <div class="columns">
-                        <div><span style="font-weight: 700;">{{headlineFigures.suspected_cases | number:0}}</span> suspected cases</div>
+                        <div><span style="font-weight: 700;">{{currentDataset.latestFigures.cases.suspected | number:0}}</span> suspected cases</div>
                     </div>
                   </div>
               </div>
@@ -121,17 +121,17 @@
               <!-- Deaths -->
               <div class="six columns small-font">
                   <div class="row">
-                            <h1 style="color: #404040;">{{headlineFigures.all_deaths | number:0}} Deaths</h1>
+                            <h1 style="color: #404040;">{{currentDataset.latestFigures.deaths.all | number:0}} Deaths</h1>
                   </div>
                   <div class="row">
                     <div class="columns" style="padding-left: 0px;">
-                        <div><span style="font-weight: 700;">{{headlineFigures.confirmed_deaths | number:0}}</span> confirmed deaths</div>
+                        <div><span style="font-weight: 700;">{{currentDataset.latestFigures.deaths.confirmed | number:0}}</span> confirmed deaths</div>
                     </div>
                     <div class="columns">
-                        <div><span style="font-weight: 700;">{{headlineFigures.probable_deaths | number:0}}</span> probable deaths</div>
+                        <div><span style="font-weight: 700;">{{currentDataset.latestFigures.deaths.probable | number:0}}</span> probable deaths</div>
                     </div>
                     <div class="columns">
-                        <div><span style="font-weight: 700;">{{headlineFigures.suspected_deaths | number:0}}</span> suspected deaths</div>
+                        <div><span style="font-weight: 700;">{{currentDataset.latestFigures.deaths.suspected | number:0}}</span> suspected deaths</div>
                     </div>
                   </div>
                   <br />
