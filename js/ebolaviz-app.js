@@ -21,21 +21,6 @@ var ebolaVizApp = angular.module("ebolaVizApp", [])
 				}
 			}
 		}
-		
-		function refreshHeadlineFigures() {
-			dataService.getHeadlineFigures()
-			.success(function (data) {
-				$scope.headlineFigures = {};
-				for (var i = 0; i < data.length; i++) {
-					$scope.headlineFigures[data[i].case_definition] = data[i].value;
-				}
-			})
-			.error(function (error) {
-				$scope.headlineFigures = {};
-				alert("Failed to get headline figures");
-			});
-		};
-		refreshHeadlineFigures();
 
 		function refreshCountryCasesChart(bindElement, isCases) {
 			var postfix = (isCases) ? "_cases": "_deaths";
@@ -47,6 +32,7 @@ var ebolaVizApp = angular.module("ebolaVizApp", [])
 				}
 				else {
 					generateAllCountriesChart(bindElement, buildAllCountriesData(data));
+					configureCurrentDataset();
 				};
 			})
 			.error(function (error) {
@@ -163,6 +149,7 @@ var ebolaVizApp = angular.module("ebolaVizApp", [])
 
 		$scope.onChartOptionsChanged = function() {
 			refreshCharts();
+			configureCurrentDataset();
 		};
 
 		function buildAllCountriesData(data) {
@@ -345,13 +332,11 @@ var ebolaVizApp = angular.module("ebolaVizApp", [])
 			};
 		};
 
-		function initApplication() {
+		$scope.initApplication = function () {
 			refreshDatasets();
-			configureCurrentDataset();
 			refreshCharts();
 		};
 
-		initApplication();
-		//refreshCharts();
+		$scope.initApplication();
 
 	}]);
