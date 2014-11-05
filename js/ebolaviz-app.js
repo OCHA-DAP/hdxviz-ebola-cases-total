@@ -36,6 +36,20 @@ var ebolaVizApp = angular.module("ebolaVizApp", [])
 			});
 		};
 		refreshHeadlineFigures();
+
+		function refreshCountryHeadlineFigures() {
+			dataService.getLatestFigures()
+			.success(function (data) {
+				$scope.headlineFigures = {};
+				for (var i = 0; i < data.length; i++) {
+					$scope.headlineFigures[data[i].case_definition] = data[i].value;
+				}
+			})
+			.error(function (error) {
+				$scope.headlineFigures = {};
+				alert("Failed to get headline figures");
+			});
+		};
 		
 		function refreshCountryCasesChart(bindElement, isCases) {
 			var postfix = (isCases) ? "_cases": "_deaths";
@@ -212,5 +226,75 @@ var ebolaVizApp = angular.module("ebolaVizApp", [])
 		}
 
 		refreshCharts();
+
+		function refreshData() {
+			dataset = [];
+			dataService.getLatestFigures()
+			.success(function (data) {
+				$scope.headlineFigures = {};
+				for (var i = 0; i < data.length; i++) {
+					$scope.headlineFigures[data[i].case_definition] = data[i].value;
+				}
+			})
+			.error(function (error) {
+				$scope.headlineFigures = {};
+				alert("Failed to get headline figures");
+			});
+		};
+
+		function refreshLatestFigures(dataset, data) {
+			for (i=0; i<data.length; i++) {
+				var locationIndex = getLocationIndex(dataset, data[i].location, true);
+				var indicator = data[i].case_definition;
+				var value = data[i].value;
+				switch (indicator) {
+					case "":
+						dataset[locationIndex].latestFigures.cases.all = value;
+						break;
+					case "":
+						dataset[locationIndex].latestFigures.cases.confirmed = value;
+						break;
+					case "":
+						dataset[locationIndex].latestFigures.cases.probable = value;
+						break;
+					case "":
+						dataset[locationIndex].latestFigures.cases.suspected = value;
+						break;
+					case "":value;
+						dataset[locationIndex].latestFigures.deaths.all = value;
+						break;
+					case "":
+						dataset[locationIndex].latestFigures.deaths.confirmed = value;
+						break;
+					case "":
+						dataset[locationIndex].latestFigures.deaths.probable = value;
+						break;
+					case "":
+						dataset[locationIndex].latestFigures.deaths.suspected = value;
+						break;
+				};
+			};
+		};
+
+		function findLocationIndex(dataset, location, create) {
+			for (i=0; i<dataset.length; i++) {
+				if (location == dataset[i].location) {
+					return i;
+					break;
+				};
+			};
+			
+			//We have reached this far because the location has not been found.
+			//We may have to create an entry for the location based on the the
+			//setting of the create parameter.
+			if (create) {
+				var newLocationObject = {
+					location: location
+				};
+				return dataset.push(newLocationObject)-1;
+			} else {
+				return -1;
+			};
+		};
 
 	}]);

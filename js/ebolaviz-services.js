@@ -1,6 +1,7 @@
 ebolaVizApp.service("dataService", ["$http", function($http) {
 	
 	var urlBase = "https://ds-ec2.scraperwiki.com/hkiw9sb/ky9zjrxscneu7mg";
+	var sqlEndpointUrlBase = "https://ds-ec2.scraperwiki.com/hkiw9sb/ky9zjrxscneu7mg/sql?q=";
 	
 	this.getCountries = function() {
 		return [
@@ -33,12 +34,36 @@ ebolaVizApp.service("dataService", ["$http", function($http) {
 	};
 	
     this.getHeadlineFigures = function() {
-		url = urlBase + "/sql?q=SELECT * from VW_HEADLINE_FIGURES";
+		var url = urlBase + "/sql?q=SELECT * from VW_HEADLINE_FIGURES";
 		return $http.get(url);
     };
 
     this.getCountryChartData = function(location,caseDefinition) {
-		var command = "Select * From VW_RAW_DATA ";
+		var sql = "Select * From VW_RAW_DATA " + buildLocationCaseDefinitionWhereClause(location, caseDefinition) + " Order By value ASC";
+		return $http.get(sqlEndpointUrlBase + sql);
+    };
+
+    this.getLatestFiguresPromise = function(location, caseDefinition) {
+    	var sql = "SELECT * from VW_LATEST_FIGURES" + buildLocationCaseDefinitionWhereClause(location, caseDefinition) + " Order By value ASC";
+		return $http.get(sqlEndpointUrlBase + sql);
+    };
+
+    this.getRawDataPromise = function(location, caseDefinition) {
+    	var sql = "Select * From VW_RAW_DATA " + buildLocationCaseDefinitionWhereClause(location, caseDefinition) + " Order By value ASC";
+		return $http.get(sqlEndpointUrlBase + sql);
+    };
+
+    this.getCountriesPromise = function() {
+    	var sql = "Select DISTINCT location from Observations Order By location";
+    	return $http.get(sqlEndpointUrlBase + sql);
+    };
+
+    this.getPeriodsPromise = function() {
+    	var sql = "Select DISTINCT perion from Observations Order By period";
+    	return $http.get(sqlEndpointUrlBase + sql);
+    };
+
+    function buildLocationCaseDefinitionWhereClause(location, caseDefinition) {
 		var whereClause = "";
 		if (location && caseDefinition) {
 			whereClause = " WHERE location='" + location + "' AND case_definition='" + caseDefinition + "' ";
@@ -46,10 +71,8 @@ ebolaVizApp.service("dataService", ["$http", function($http) {
 			whereClause = " WHERE location='" + location + "'";
 		} else if (caseDefinition) {
 			whereClause = " WHERE case_definition='" + caseDefinition + "'";
-		}
-		command += whereClause + " Order By value ASC";
-		console.log(command);
-		return $http.get(urlBase + "/sql?q="+command);
+		};
+		return whereClause;
     };
 
 }]);
