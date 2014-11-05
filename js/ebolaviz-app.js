@@ -50,7 +50,9 @@ var ebolaVizApp = angular.module("ebolaVizApp", [])
 				data: {
 					json: data,
 					mimeType: "json",
-					x: "period",
+					xs: {
+			            'period': 'x1'
+			        },
 					type: "area",
 					keys: {
 						x: "period",
@@ -108,8 +110,8 @@ var ebolaVizApp = angular.module("ebolaVizApp", [])
 				data: {
 					x: "country",
 					columns: data,
-					type: "area-spline",
-					groups: [groups]
+					type: "line"
+					// groups: [groups]
 				},
 				axis: {
 					x: {
@@ -117,8 +119,8 @@ var ebolaVizApp = angular.module("ebolaVizApp", [])
 						tick: {
 							format: xAxisDateFormat,
 							culling: {
-								max: 100
-							}
+								max: 7
+							},
 						},
 						label: {
 							text: "Report date",
@@ -135,7 +137,7 @@ var ebolaVizApp = angular.module("ebolaVizApp", [])
 					height: 300
 				},
 				padding: {
-					right: 20
+					right: 50
 				}		
 			}
 			return c3.generate(config2);			
@@ -172,7 +174,7 @@ var ebolaVizApp = angular.module("ebolaVizApp", [])
 					periodIndex = dataArray[0].length;
 					dataArray[0][periodIndex] = period;
 					for (i=1; i<dataArray.length; i++) {
-						dataArray[i][periodIndex] = "";
+						dataArray[i][periodIndex] = null;
 					};
 				};
 
@@ -189,7 +191,7 @@ var ebolaVizApp = angular.module("ebolaVizApp", [])
 					dataArray[countryIndex] = [];
 					dataArray[countryIndex][0] = country;
 					for (i=1; i<dataArray[0].length; i++) {
-						dataArray[countryIndex][i] = "";
+						dataArray[countryIndex][i] = null;
 					};
 				};
 				dataArray[countryIndex][periodIndex] = value;
@@ -258,6 +260,7 @@ var ebolaVizApp = angular.module("ebolaVizApp", [])
 				datasetsArray[allCountriesindex].latestFigures.deaths.probable += datasetsArray[i].latestFigures.deaths.probable;
 				datasetsArray[allCountriesindex].latestFigures.deaths.suspected += datasetsArray[i].latestFigures.deaths.suspected;
 			};
+			$scope.currentDataset = datasetsArray[allCountriesindex];
 		};
 
 		function getDatasetIndex(datasetsArray, location, create) {
