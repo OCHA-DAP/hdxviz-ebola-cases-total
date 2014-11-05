@@ -37,20 +37,6 @@ var ebolaVizApp = angular.module("ebolaVizApp", [])
 		};
 		refreshHeadlineFigures();
 
-		function refreshCountryHeadlineFigures() {
-			dataService.getLatestFigures()
-			.success(function (data) {
-				$scope.headlineFigures = {};
-				for (var i = 0; i < data.length; i++) {
-					$scope.headlineFigures[data[i].case_definition] = data[i].value;
-				}
-			})
-			.error(function (error) {
-				$scope.headlineFigures = {};
-				alert("Failed to get headline figures");
-			});
-		};
-		
 		function refreshCountryCasesChart(bindElement, isCases) {
 			var postfix = (isCases) ? "_cases": "_deaths";
 			var location = ($scope.selectedCountry == "All affected countries") ? null: $scope.selectedCountry; //send the null value to getCountryData if all affected countries is selected
@@ -225,60 +211,71 @@ var ebolaVizApp = angular.module("ebolaVizApp", [])
 			return dataArray;
 		}
 
-		refreshCharts();
+		function refreshDatasets() {
+			$scope.datasets = [];
 
-		function refreshData() {
-			dataset = [];
-			dataService.getLatestFigures()
+			//update headline figures
+			dataService.getLatestFiguresPromise()
 			.success(function (data) {
-				$scope.headlineFigures = {};
-				for (var i = 0; i < data.length; i++) {
-					$scope.headlineFigures[data[i].case_definition] = data[i].value;
-				}
+				getLatestFigures($scope.datasets, data);
+				addAllAffectedCountriesLatestFigues($scope.datasets);
 			})
 			.error(function (error) {
 				$scope.headlineFigures = {};
-				alert("Failed to get headline figures");
+				alert("Failed to update headline figures");
 			});
 		};
 
-		function refreshLatestFigures(dataset, data) {
-			for (i=0; i<data.length; i++) {
-				var locationIndex = getLocationIndex(dataset, data[i].location, true);
+		function getLatestFigures(datasetsArray, data) {
+			for (var i=0; i<data.length; i++) {
 				var indicator = data[i].case_definition;
 				var value = data[i].value;
-				switch (indicator) {
-					case "":
-						dataset[locationIndex].latestFigures.cases.all = value;
-						break;
-					case "":
-						dataset[locationIndex].latestFigures.cases.confirmed = value;
-						break;
-					case "":
-						dataset[locationIndex].latestFigures.cases.probable = value;
-						break;
-					case "":
-						dataset[locationIndex].latestFigures.cases.suspected = value;
-						break;
-					case "":value;
-						dataset[locationIndex].latestFigures.deaths.all = value;
-						break;
-					case "":
-						dataset[locationIndex].latestFigures.deaths.confirmed = value;
-						break;
-					case "":
-						dataset[locationIndex].latestFigures.deaths.probable = value;
-						break;
-					case "":
-						dataset[locationIndex].latestFigures.deaths.suspected = value;
-						break;
+				var locationIndex = getDatasetIndex(datasetsArray, data[i].location, true);
+				if (indicator == "all_cases") {
+					datasetsArray[locationIndex].latestFigures.cases.all = value;
+				} else if (indicator == "confirmed_cases") {
+					datasetsArray[locationIndex].latestFigures.cases.confirmed = value;
+				} else if (indicator == "probable_cases") {
+					datasetsArray[locationIndex].latestFigures.cases.probable = value;
+				} else if (indicator == "suspected_cases") {
+					datasetsArray[locationIndex].latestFigures.cases.suspected = value;
+				} else if (indicator == "all_deaths") {
+					datasetsArray[locationIndex].latestFigures.deaths.all = value;
+				} else if (indicator == "confirmed_deaths") {
+					datasetsArray[locationIndex].latestFigures.deaths.confirmed = value;
+				} else if (indicator == "probable_deaths") {
+					datasetsArray[locationIndex].latestFigures.deaths.probable = value;
+				} else if (indicator == "suspected_deaths") {
+					datasetsArray[locationIndex].latestFigures.deaths.suspected = value;
 				};
 			};
 		};
 
-		function findLocationIndex(dataset, location, create) {
-			for (i=0; i<dataset.length; i++) {
-				if (location == dataset[i].location) {
+		function addAllAffectedCountriesLatestFigues(datasetsArray) {
+			var allCountriesindex = getDatasetIndex(datasetsArray, "All affected countries", true);
+			datasetsArray[allCountriesindex].latestFigures.cases.all = 0;
+			datasetsArray[allCountriesindex].latestFigures.cases.confirmed = 0;
+			datasetsArray[allCountriesindex].latestFigures.cases.probable = 0;
+			datasetsArray[allCountriesindex].latestFigures.cases.suspected = 0;
+			datasetsArray[allCountriesindex].latestFigures.deaths.all = 0;
+			datasetsArray[allCountriesindex].latestFigures.deaths.confirmed = 0;
+			datasetsArray[allCountriesindex].latestFigures.deaths.probable = 0;
+			datasetsArray[allCountriesindex].latestFigures.deaths.suspected = 0;
+			for (var i=0; i<datasetsArray.length - 1; i++) {
+				datasetsArray[allCountriesindex].latestFigures.cases.all += datasetsArray[i].latestFigures.cases.all;
+				datasetsArray[allCountriesindex].latestFigures.cases.confirmed += datasetsArray[i].latestFigures.cases.confirmed;
+				datasetsArray[allCountriesindex].latestFigures.cases.probable += datasetsArray[i].latestFigures.cases.probable;
+				datasetsArray[allCountriesindex].latestFigures.cases.suspected += datasetsArray[i].latestFigures.cases.suspected;
+				datasetsArray[allCountriesindex].latestFigures.deaths.all += datasetsArray[i].latestFigures.deaths.all;
+				datasetsArray[allCountriesindex].latestFigures.deaths.confirmed += datasetsArray[i].latestFigures.deaths.confirmed;
+				datasetsArray[allCountriesindex].latestFigures.deaths.probable += datasetsArray[i].latestFigures.deaths.probable;
+				datasetsArray[allCountriesindex].latestFigures.deaths.suspected += datasetsArray[i].latestFigures.deaths.suspected;
+			};
+		};
+
+		function getDatasetIndex(datasetsArray, location, create) {
+			for (var i=0; i<datasetsArray.length; i++) {
+				if (location == datasetsArray[i].location) {
 					return i;
 					break;
 				};
@@ -288,13 +285,73 @@ var ebolaVizApp = angular.module("ebolaVizApp", [])
 			//We may have to create an entry for the location based on the the
 			//setting of the create parameter.
 			if (create) {
-				var newLocationObject = {
-					location: location
+				var dataset = {
+					location: location,
+					latestFigures: {
+						cases: {
+							all: "",
+							confirmed: "",
+							probable: "",
+							suspected: ""
+						},
+						deaths: {
+							all: "",
+							confirmed: "",
+							probable: "",
+							suspected: ""
+						}
+					},
+					casesData: {
+						all: [
+							["period", "value"]
+						],
+						confirmed: [
+							["period", "value"]
+						],
+						probable: [
+							["period", "value"]
+						],
+						suspected: [
+							["period", "value"]
+						]
+					},
+					deathsData: {
+						all: [
+							["period", "value"]
+						],
+						confirmed: [
+							["period", "value"]
+						],
+						probable: [
+							["period", "value"]
+						],
+						suspected: [
+							["period", "value"]
+						]
+					}					
 				};
-				return dataset.push(newLocationObject)-1;
+				return datasetsArray.push(dataset)-1;
 			} else {
 				return -1;
 			};
 		};
+
+		function configureCurrentDataset() {
+			var datasetIndex = getDatasetIndex($scope.datasets, $scope.selectedCountry, false);
+			if (datasetIndex >= 0) {
+				$scope.currentDataset = $scope.datasets[datasetIndex];
+			} else {
+				alert("Data configuration failed")
+			};
+		};
+
+		function initApplication() {
+			refreshDatasets();
+			configureCurrentDataset();
+			refreshCharts();
+		};
+
+		initApplication();
+		//refreshCharts();
 
 	}]);

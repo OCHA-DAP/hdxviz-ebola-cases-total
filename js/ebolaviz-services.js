@@ -8,11 +8,11 @@ ebolaVizApp.service("dataService", ["$http", function($http) {
 			{id: "All affected countries", name: "All affected countries"},
 			{id: "Liberia", name: "Liberia"},
 			{id: "Guinea", name: "Guinea"},
-			{id: "Mali", name: "Mali"},
 			{id: "Sierra Leone", name: "Sierra Leone"},
-			{id: "Nigeria", name: "Nigeria"},
+			{id: "Mali", name: "Mali"},
 			{id: "Spain", name: "Spain"},
 			{id: "United States of America", name: "United States of America"},
+			{id: "Nigeria", name: "Nigeria"},
 			{id: "Senegal", name: "Senegal"}
 		];
 	};
@@ -45,6 +45,7 @@ ebolaVizApp.service("dataService", ["$http", function($http) {
 
     this.getLatestFiguresPromise = function(location, caseDefinition) {
     	var sql = "SELECT * from VW_LATEST_FIGURES" + buildLocationCaseDefinitionWhereClause(location, caseDefinition) + " Order By value ASC";
+    	alert(sql);
 		return $http.get(sqlEndpointUrlBase + sql);
     };
 
