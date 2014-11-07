@@ -19,10 +19,10 @@ ebolaVizApp.service("dataService", ["$http", function($http) {
 	
     this.getCaseTypes = function() {
 		return [
-			{id: "all", name: "All case definitions"},
-			{id: "confirmed", name: "Confirmed cases"},
-			{id: "probable", name: "Probable cases"},
-			{id: "suspected", name: "Suspected cases"}
+			{id: "all", name: "All definitions"},
+			{id: "confirmed", name: "Confirmed"},
+			{id: "probable", name: "Probable"},
+			{id: "suspected", name: "Suspected"}
 		];
 	};
 	
