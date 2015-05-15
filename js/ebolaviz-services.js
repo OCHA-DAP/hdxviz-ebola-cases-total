@@ -9,6 +9,7 @@ ebolaVizApp.service("dataService", ["$http", function($http) {
 			{id: "Liberia", name: "Liberia"},
 			{id: "Guinea", name: "Guinea"},
 			{id: "Sierra Leone", name: "Sierra Leone"},
+			{id: "Italy", name: "Italy"},
 			{id: "Mali", name: "Mali"},
 			{id: "Spain", name: "Spain"},
 			{id: "United Kingdom", name: "United Kingdom"},
