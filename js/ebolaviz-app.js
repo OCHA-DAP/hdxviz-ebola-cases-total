@@ -90,6 +90,7 @@ var ebolaVizApp = angular.module("ebolaVizApp", [])
 				},
 				point: {
 					r: 3,
+					show: false,
 					select: {
 						r: 5
 					}
